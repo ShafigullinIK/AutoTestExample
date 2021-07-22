@@ -33,7 +33,12 @@ jobs:
     # Java distribution. See the list of supported distributions in README file
           distribution: 'adopt'
     # The package type (jdk, jre, jdk+fx, jre+fx)
-   
+      - name: Cache Maven packages
+          uses: actions/cache@v2
+          with:
+            path: ~/.m2
+            key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+            restore-keys: ${{ runner.os }}-m2
 
       # Runs a single command using the runners shell
       - name: Run tests
