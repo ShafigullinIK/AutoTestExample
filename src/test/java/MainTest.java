@@ -5,6 +5,6 @@ public class MainTest {
 
     @Test
     public void testSum(){
-        Assertions.assertEquals(6, Main.sum(1, 5));
+        Assertions.assertEquals(7, Main.sum(1, 5));
     }
 }
