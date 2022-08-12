@@ -1,4 +1,4 @@
-FROM maven:3.8-amazoncorretto-8
+FROM openjdk:jdk
 
 #RUN apt update
 #RUN apt install maven
@@ -9,4 +9,4 @@ FROM maven:3.8-amazoncorretto-8
 WORKDIR /exercise
 COPY . /exercise
 
-RUN mvn compile
+RUN ./mvnw -B compile

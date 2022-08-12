@@ -5,4 +5,4 @@ bash:
 	docker run -it shafigullinik/exercise-java bash
 
 test:
-	docker run shafigullinik/exercise-java mvn test
+	docker run shafigullinik/exercise-java ./mvnw test
