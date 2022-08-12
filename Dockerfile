@@ -27,3 +27,5 @@ RUN useradd autograder && \
    chown -R autograder:autograder /home/autograder
 
 WORKDIR /home/autograder/working_dir
+
+RUN ./mvnw -B compile
