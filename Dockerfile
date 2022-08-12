@@ -1,12 +1,29 @@
-FROM openjdk:jdk
+FROM ubuntu:focal
 
-#RUN apt update
-#RUN apt install maven
+# setup openjdk 18
+ENV JAVA_HOME=/opt/java/openjdk
+COPY --from=eclipse-temurin:11 $JAVA_HOME $JAVA_HOME
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-#RUN curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.31/checkstyle-8.31-all.jar > /opt/checkstyle.jar
-#RUN chmod 777 /opt/checkstyle.jar
+# setup ag reqs
 
-WORKDIR /exercise
-COPY . /exercise
+RUN apt-get update --fix-missing
+RUN apt-get install -y build-essential
+RUN apt-get install -y python3 python3-pip
 
-RUN ./mvnw -B compile
+RUN mkdir -p /home/autograder/working_dir/src/main/java
+RUN mkdir -p /home/autograder/working_dir/src/test/java
+RUN mkdir -p /home/autograder/mvn_tmp
+
+WORKDIR /home/autograder/mvn_tmp
+RUN wget https://github.com/ShafigullinIK/AutoTestExample/archive/refs/heads/master.zip
+RUN unzip -a ./master.zip
+
+RUN mv ./AutoTestExample-master/.mvn ../working_dir
+RUN mv ./AutoTestExample-master/mvnw ../working_dir
+RUN mv ./AutoTestExample-master/pom.xml ../working_dir
+
+RUN useradd autograder && \
+   chown -R autograder:autograder /home/autograder
+
+WORKDIR /home/autograder/working_dir
