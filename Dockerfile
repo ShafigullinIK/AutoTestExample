@@ -3,24 +3,28 @@ FROM ubuntu:focal
 
 RUN apt-get update --fix-missing
 RUN apt-get install -y build-essential
-RUN apt-get install -y python3 python3-pip
+RUN apt-get install -y python3 python3-pip wget unzip curl
 
 RUN mkdir -p /home/autograder/working_dir/src/main/java
 RUN mkdir -p /home/autograder/working_dir/src/test/java
 RUN mkdir -p /home/autograder/mvn_tmp
+RUN mkdir -p /home/autograder/.m2
+
+RUN useradd autograder && \
+   chown -R autograder:autograder /home/autograder
+
+USER autograder
 
 WORKDIR /home/autograder/mvn_tmp
-RUN apt-get install -y wget unzip curl
 RUN wget https://github.com/ShafigullinIK/AutoTestExample/archive/refs/heads/master.zip
 RUN unzip -a ./master.zip
 
 RUN mv ./AutoTestExample-master/.mvn ../working_dir
 RUN mv ./AutoTestExample-master/pom.xml ../working_dir
 
-RUN useradd autograder && \
-   chown -R autograder:autograder /home/autograder
-
 WORKDIR /home/autograder/working_dir
+
+USER root
 
 # setup openjdk 18
 ENV JAVA_HOME=/opt/java/openjdk
@@ -42,11 +46,15 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
 ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
-#COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY settings-docker.xml /usr/share/maven/ref/
-COPY settings-docker.xml ${MAVEN_CONFIG}/settings.xml
+RUN cp /home/autograder/mvn_tmp/AutoTestExample-master/settings-docker.xml /usr/share/maven/ref/
+
+USER autograder
 
 RUN mvn dependency:go-offline
 RUN mvn clean install
+
+RUN cp /home/autograder/mvn_tmp/AutoTestExample-master/settings-docker.xml /home/autograder/.m2/settings.xml
+
+USER root
 
 CMD ["/bin/bash"]
