@@ -30,3 +30,5 @@ RUN useradd autograder && \
 WORKDIR /home/autograder/working_dir
 
 RUN ./mvnw -B compile
+
+CMD ["/bin/bash"]
