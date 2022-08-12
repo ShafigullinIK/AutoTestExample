@@ -32,6 +32,4 @@ RUN ./mvnw dependency:go-offline
 RUN ./mvnw clean install
 RUN ./mvnw -o test
 
-RUN echo "127.0.0.1   repo.maven.apache.org" >> /etc/hosts
-
 CMD ["/bin/bash"]
