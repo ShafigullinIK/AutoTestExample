@@ -1,18 +1,12 @@
 FROM ubuntu:focal
-
-# setup openjdk 18
-ENV JAVA_HOME=/opt/java/openjdk
-COPY --from=eclipse-temurin:11 $JAVA_HOME $JAVA_HOME
-ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
 # setup ag reqs
 
 RUN apt-get update --fix-missing
 RUN apt-get install -y build-essential
 RUN apt-get install -y python3 python3-pip
 
-RUN mkdir -p /home/autograder/working_dir/src/main/java
-RUN mkdir -p /home/autograder/working_dir/src/test/java
+RUN mkdir -p /home/autograder/working_dir/GBAutoTest/src/main/java
+RUN mkdir -p /home/autograder/working_dir/GBAutoTest/src/test/java
 RUN mkdir -p /home/autograder/mvn_tmp
 
 WORKDIR /home/autograder/mvn_tmp
@@ -28,6 +22,11 @@ RUN useradd autograder && \
    chown -R autograder:autograder /home/autograder
 
 WORKDIR /home/autograder/working_dir
+
+# setup openjdk 18
+ENV JAVA_HOME=/opt/java/openjdk
+COPY --from=eclipse-temurin:11 $JAVA_HOME $JAVA_HOME
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 RUN ./mvnw -B compile
 
