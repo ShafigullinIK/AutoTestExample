@@ -16,7 +16,7 @@ RUN mkdir -p /home/autograder/working_dir/src/test/java
 RUN mkdir -p /home/autograder/mvn_tmp
 
 WORKDIR /home/autograder/mvn_tmp
-RUN apt-get install -y wget
+RUN apt-get install -y wget unzip
 RUN wget https://github.com/ShafigullinIK/AutoTestExample/archive/refs/heads/master.zip
 RUN unzip -a ./master.zip
 
